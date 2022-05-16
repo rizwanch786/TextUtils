@@ -20,11 +20,8 @@ def analyze(request):
         return HttpResponse("Please select any operation and try again")
     # remove Punctuations
     if rPun == "on":
-        analyzed_pun = ''
         punch = '''!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~'''
-        for char in string:
-            if char not in punch:
-                analyzed_pun += char
+        analyzed_pun = ''.join(char for char in string if char not in punch)
         d = {"purpose": "Remove Punctuation", "analyzed_text": analyzed_pun}
         string = analyzed_pun
     # Upper case
@@ -34,20 +31,17 @@ def analyze(request):
         string = analyze_cap
     # Remove extra spaces
     if rSpace == "on":
-        analyzed_spaces = ''
-        for index, char in enumerate(string):
-            if string[index] == " " and string[index + 1] == " ":
-                pass
-            else:
-                analyzed_spaces += char
+        analyzed_spaces = ''.join(
+            char
+            for index, char in enumerate(string)
+            if string[index] != " " or string[index + 1] != " "
+        )
+
         d = {"purpose": "Remove Extra Spaces", "analyzed_text": analyzed_spaces}
         string = analyzed_spaces
     # Remove new lines
     if rline == "on":
-        remove_new_line = ''
-        for char in string:
-            if char != "\n" and char != "\r":
-                remove_new_line += char
+        remove_new_line = ''.join(char for char in string if char not in ["\n", "\r"])
         d = {"purpose": "Remove NewLines", "analyzed_text": remove_new_line}
         string = remove_new_line
 
